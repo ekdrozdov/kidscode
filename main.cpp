@@ -1,6 +1,11 @@
+// TODO
+// where to validate a variable name?
+// hash function
+
 #include "constTable.h"
 #include "map"
 #include "attributes.h"
+#include "hashTable.h"
 
 using namespace std;
 
@@ -22,6 +27,28 @@ int main() {
 	ConstTable signs = ConstTable(_signs, 2);
 	ConstTable additional = ConstTable(_additional, 0);
 
+	HashTable variables = HashTable(100);
+	cout << "Table size set as " << variables.getSize() << endl;
+	cout << "--- VALUES SETTING ---\n";
+	cout << "Let's add three variables: 'x', 'yVar' and 'z'" << endl;
+	variables.add("x");
+	variables.add("yVar");
+	variables.add("z");
+	variables.print();
+	cout << "--- SEARCHING ---\n";
+	cout << "Let's search for 'x' and 'y' by names" << endl;
+	cout << variables.find("x") << endl;
+	cout << variables.find("y") << endl;
+	cout << "--- MODYFYING ---\n";
+	cout << "Let's say 'x' and 'z' is define and 'x' type is int" << endl;
+	string name = "x";
+	variables.setDefine(name);
+	variables.setType(name, 1);
+	name = "z";
+	variables.setDefine(name);
+	variables.print();
+
+	/*
 	map<string, Attributes> identifiers;
 	map<string, Attributes> constants;
 	Attributes attributes;
@@ -56,6 +83,7 @@ int main() {
 	search = identifiers.find("x");
 	search->second.isDefine = 1;
 	std::cout << search->first << ", " << search->second << '\n';
+	*/
 
 	return 0;
 }

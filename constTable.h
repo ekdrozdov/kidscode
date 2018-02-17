@@ -10,6 +10,7 @@ public:
 	~ConstTable();
 
 	int find(string item);
+	string find(int index);
 	void print();
 
 private:

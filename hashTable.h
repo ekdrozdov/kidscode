@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
-#include "attributes.h"
+#include "record.h"
 
 using namespace std;
 
@@ -10,12 +10,19 @@ public:
 	HashTable(int size);
 	~HashTable();
 
-	int find(string item);
-	void add(string item);
+	int add(string name);
+	int find(string name);
+	string find(int index);
+
+	int setType(string name, int type);
+	int setDefine(string name);
+
+	int getSize() { return size; }
+
 	void print();
 
 private:
-	int hashFunc(string item);
+	int hashFunc(string name);
 	int size;
-	string* items;
+	Record* items;
 };

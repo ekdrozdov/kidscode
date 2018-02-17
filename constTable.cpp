@@ -27,6 +27,10 @@ int ConstTable::find(string item) {
 	return -1;
 }
 
+string ConstTable::find(int index) {
+	return items[index];
+}
+
 void ConstTable::print() {
 	cout << "Size = " << size << endl;
 	for (int i = 0; i < size; ++i) {
