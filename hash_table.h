@@ -3,6 +3,9 @@
 #include <iostream>
 #include "record.h"
 
+#define N_T_IDENTIFIERS 3
+#define N_T_CONSTANTS 4
+
 using namespace std;
 
 class HashTable {

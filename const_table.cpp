@@ -1,4 +1,4 @@
-#include "constTable.h"
+#include "const_table.h"
 
 ConstTable::ConstTable(string* newItems, int nTotal) {
 	size = nTotal;

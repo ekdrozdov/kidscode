@@ -10,6 +10,8 @@ public:
 	// -1 -- undeclarate
 	// 0 -- int
 	int type;
+	// -1 -- no define
+	// 0 -- define
 	int isDefine;
 };
 

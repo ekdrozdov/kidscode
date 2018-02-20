@@ -1,4 +1,4 @@
-#include "hashTable.h"
+#include "hash_table.h"
 
 HashTable::HashTable(int newSize) {
 	size = newSize;
@@ -14,13 +14,25 @@ HashTable::~HashTable() {
 }
 
 int HashTable::add(string item) {
-	items[hashFunc(item)].name = item;	
+	int index = hashFunc(item);
+
+	// Collision handling.
+	while ((index < size) && (items[index].name != "")) {
+		++index;
+	}
+	if (index < size) {
+		items[index].name = item;	
+		return index;
+	}
+
+	cout << "unresovable collision\n";
+	return -1;	
 }
 
 int HashTable::find(string name) {
 	int index = hashFunc(name);
 	while ((index < size) && (items[index].name != name)) {
-		index++;
+		++index;
 	}
 	if (index < size) {
 		return index;
@@ -58,6 +70,7 @@ int HashTable::hashFunc(string name) {
 	for (auto it : name) {
 		counter += int(it);
 	}
+	counter %= size;
 
-	return counter % size;	
+	return counter;
 }
