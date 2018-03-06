@@ -10,7 +10,6 @@
 
 extern ConstTable delimiters;
 extern ConstTable keywords;
-extern ConstTable operations;
 extern HashTable identifiers;
 extern HashTable constants;
 
@@ -22,8 +21,7 @@ public:
 
 private:
 	FSM fsm;	
-	int currentLine;
-	int currentPosition;
+	int errorsCount;
 
 	Token makeToken(std::string name, int type);
 };

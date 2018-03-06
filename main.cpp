@@ -10,12 +10,10 @@
 using namespace std;
 
 string _keywords[3] = {"main", "int", "return"};
-string _delimiters[5] = {";", "(", ")", "{", "}"};
-string _operations[3] = {"+", "*", "="};
+string _delimiters[6] = {";", "+", "&&", "=", "-", "||"};
 
 ConstTable keywords = ConstTable(_keywords, 3);
-ConstTable delimiters = ConstTable(_delimiters,  5);
-ConstTable operations = ConstTable(_operations, 2);
+ConstTable delimiters = ConstTable(_delimiters,  6);
 
 HashTable constants = HashTable(100);
 HashTable identifiers = HashTable(100);

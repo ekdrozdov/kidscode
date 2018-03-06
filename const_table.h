@@ -4,7 +4,6 @@
 
 #define N_T_DELIMITERS 0
 #define N_T_KEYWORDS 1
-#define N_T_OPERATIONS 2
 
 using namespace std;
 
