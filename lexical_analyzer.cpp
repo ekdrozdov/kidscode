@@ -1,7 +1,5 @@
 #include "lexical_analyzer.h"
 
-using namespace std;
-
 LexicalAnalyzer::LexicalAnalyzer() {
 	errorsCount = 0;
 }
@@ -83,27 +81,62 @@ Token LexicalAnalyzer::makeToken(std::string lexemName, int lexemType) {
 }
 
 void LexicalAnalyzer::scanCode(std::string filename) {
+	errorsCount = 0;
+	currentLine = 0;
 	ifstream file;
 	file.open(filename);
-	fsm.reset(filename);
+
 	while (file) {
-		int lexemType = fsm.parse(&file);
-		if (lexemType != S_ERROR) {
-			Token token = makeToken(fsm.getBuf(), lexemType);
-			if (token.correct())
-				std::cout << token.readable(fsm.getBuf(), 1);
-			file.unget();
-		}
-		else {
-			errorsCount++;
-			std::cout << std::endl;
-			std::cout << fsm.getFilename() << ":" << fsm.getString() <<
-				":" << fsm.getPosition() << ": ";
-			std::cout << "\e[1merror:\e[0m expected _analyze_info_\n";
+		std::string line;
+		std::getline(file, line);
+		fsm.resetShift();
+		currentLine++;
+		line.append("\n");
+		std::string::iterator it = line.begin();
+		std::string::iterator end = line.end();
+
+		while (it != end) {
+			int lexemType = fsm.parse(end, &it);
+			//std::cout << "type rcvd: " << lexemType;
+			//std::cout << " buffer: " << fsm.getBuf() << std::endl;
+
+			if (lexemType != S_ERROR) {
+				if (lexemType != S_IN_PROGRESS) {
+					Token token = makeToken(fsm.getBuf(), lexemType);
+					if (token.correct())
+						std::cout << token.readable(fsm.getBuf(), 1);
+				}
+				if (it != end) {
+					it--;
+					fsm.decShift();
+				}
+			}
+			else {
+				errorsCount++;
+				printErrorMessage(lexemType, filename, line);
+			}
 		}
 	}
-	std::cout << std::endl;
-	if (errorsCount != 0)
-		std::cout << "Total errors: " << errorsCount << std::endl;
+
+	if (errorsCount > 0) {
+		std::cout << "Errors total: " << errorsCount << std::endl;
+	}
 	file.close();
+}
+
+void LexicalAnalyzer::printErrorMessage(int lexemType, 
+		std::string filename, std::string line) {
+	std::cout << std::endl;
+	currentPosition = fsm.getShift();
+	std::cout << "\e[1m" << filename << ":" <<
+		currentLine << ":" << currentPosition;
+	std::cout << ": error:\e[0m ";
+	switch (lexemType) {
+		case S_ERROR:
+			std::cout << "invalid character sequence\n";	
+			break;
+	}
+	std::string mark = "\e[1m!\e[0m";
+	line.insert(currentPosition, mark);
+	cout << '\t' << line << std::endl;
 }

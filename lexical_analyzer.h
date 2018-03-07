@@ -18,8 +18,11 @@ public:
 	LexicalAnalyzer();
 	~LexicalAnalyzer();
 	void scanCode(string filename);
+	void printErrorMessage(int lexemType, std::string filename, std::string line);
 
 private:
+	int currentLine;
+	int currentPosition;
 	FSM fsm;	
 	int errorsCount;
 

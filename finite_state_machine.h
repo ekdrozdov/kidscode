@@ -7,6 +7,7 @@
 #define LETTERS 11
 
 // FSM states.
+#define S_IN_PROGRESS -1
 #define S_START 0
 #define S_NUMBER 1
 #define S_IDENTIFIER 2
@@ -40,21 +41,18 @@ public:
 	FSM();
 	~FSM();
 
-	int parse(std::ifstream* file);
-	void reset(std::string filename);
+	int parse(std::string::iterator end, std::string::iterator* letter);
 	int getState() { return currentState; }
 	int getLetterNumber(char symbol);
 	std::string getBuf() { return buf; }
-	std::string getFilename() { return filename; }
-	int getString() { return currentString; }
-	int getPosition() { return currentPosition; }
+	int getShift() { return shift; }
+	void resetShift() { shift = 0; }
+	void decShift() { shift--; }
 
 private:
 	int transformMatrix[STATES][LETTERS];
 	int currentState;
 	int prevState;
 	std::string buf;
-	std::string filename;
-	int currentString;
-	int currentPosition;
+	int shift;
 };

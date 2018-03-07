@@ -4,11 +4,8 @@ using namespace std;
 
 FSM::FSM() {
 	buf.clear();
-	filename.clear();
 	prevState = S_START;
 	currentState = S_START;
-	currentString = 0;
-	currentPosition = 0;
 
 	transformMatrix[S_START][L_NUMBER] = S_NUMBER; 
 	transformMatrix[S_START][L_SYMBOL] = S_IDENTIFIER; 
@@ -170,11 +167,8 @@ FSM::FSM() {
 
 FSM::~FSM() {
 	buf.clear();
-	filename.clear();
 	prevState = S_START;
 	currentState = S_START;
-	currentString = 0;
-	currentPosition = 0;
 }
 
 int FSM::getLetterNumber(char letter) {
@@ -218,56 +212,43 @@ int FSM::getLetterNumber(char letter) {
 	}
 }
 
-int FSM::parse(ifstream* file) {
-	buf.clear();
-	prevState = S_START;
-	currentState = S_START;
-	currentPosition--;
+int FSM::parse(std::string::iterator end, std::string::iterator* it) {
+	if ((currentState == S_FINAL) || (currentState == S_ERROR)) {
+		buf.clear();
+		prevState = S_START;
+		currentState = S_START;
+	}
 
-	while ((currentState != S_FINAL) && (currentState != S_ERROR) && *file) {
-		char letter;
-		file->get(letter);
-		if (letter == '\n') {
-			currentString++;
-			currentPosition = 0;
-		}
-		else
-			currentPosition++;
+	while ((currentState != S_FINAL) && (currentState != S_ERROR) && (*it != end)) {
+		char letter = **it;
 		int letterNumber = getLetterNumber(letter);
+		//std::cout << lineItNumber << " " << letter << std::endl;
 		if (letterNumber == L_UNKNOWN) {
 			currentState = S_ERROR;
 		}
 		else {
-			buf.push_back(letter);
 			prevState = currentState;
 			currentState = transformMatrix[currentState][letterNumber];
+			if (currentState != S_START) {
+				buf.push_back(letter);
+			}
 		}
+		(*it)++;
+		shift++;
 	}
 
-	if (currentState != S_FINAL) {
+	if (currentState == S_ERROR) {
 		return S_ERROR;
 	}
-	else {
-		if (buf.back() == '\n')
-			currentString--;
-		// Clearing 'space' at the beggining of the string
-		// if it is.
-		int c = getLetterNumber(buf.front());
-		if ((c == L_SPACE) || (c == L_EOL) ||
-				(c == L_EOF) || (c == L_TABULATION)) {
-			buf.erase(buf.begin());
-		}
-		buf.pop_back();
 
+	if (currentState == S_FINAL) {
+		buf.pop_back();
+	}
+
+	if ((*it == end) && (currentState != S_FINAL)) {
+		return S_IN_PROGRESS;
+	}
+	else {
 		return prevState;
 	}
-}
-
-void FSM::reset(std::string filename) {
-	buf.clear();
-	prevState = S_START;
-	currentState = S_START;
-	this->filename = filename;
-	currentString = 0;
-	currentPosition = 0;
 }
