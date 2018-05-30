@@ -1,0 +1,11 @@
+1a 123 hello $ main x1 + ; $
+hi;x1x int
+11 // it is a line comment
+int a = 3;
+/* it is a
+block comment
+*/
+;
+
+(
+

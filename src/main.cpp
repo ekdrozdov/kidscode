@@ -7,10 +7,14 @@
 //#include "hash_table.h"
 #include "lexical_analyzer.h"
 
-using namespace std;
+void displayUsage(string thisProgName) {
+	std::cout << "Error: too few arguments";
+	std::cout << "Usage:\n" << thisProgName <<
+		" codeFileName.cpp\n";
+}
 
-string _keywords[3] = {"main", "int", "return"};
-string _delimiters[6] = {";", "+", "&&", "=", "-", "||"};
+std::string _keywords[3] = {"main", "int", "return"};
+std::string _delimiters[6] = {";", "+", "&&", "=", "-", "||"};
 
 ConstTable keywords = ConstTable(_keywords, 3);
 ConstTable delimiters = ConstTable(_delimiters,  6);
@@ -18,11 +22,16 @@ ConstTable delimiters = ConstTable(_delimiters,  6);
 HashTable constants = HashTable(100);
 HashTable identifiers = HashTable(100);
 
-int main() {
+int main(int argc, char** argv) {
+	if (argc != 2) {
+		displayUsage(std::string(argv[0]));
+		return EXIT_FAILURE;
+	}
+
 	LexicalAnalyzer la;
 
-	string filename = "sample.txt";
+	std::string filename = argv[1];
 	la.scanCode(filename);
 
-	return 0;
+	return EXIT_SUCCESS;
 }
