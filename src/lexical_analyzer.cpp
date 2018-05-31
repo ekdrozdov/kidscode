@@ -97,8 +97,6 @@ void LexicalAnalyzer::scanCode(std::string filename) {
 
 		while (it != end) {
 			int lexemType = fsm.parse(end, &it);
-			//std::cout << "type rcvd: " << lexemType;
-			//std::cout << " buffer: " << fsm.getBuf() << std::endl;
 
 			if (lexemType != S_ERROR) {
 				if (lexemType != S_IN_PROGRESS) {
